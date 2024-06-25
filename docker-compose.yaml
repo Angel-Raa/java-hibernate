@@ -1,0 +1,20 @@
+services:
+  postgresql-hibernate:
+    container_name: 'postgresql-hibernate'
+    image: 'postgres:15-alpine'
+    restart: always
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+volumes:
+  postgresql:
+    driver: local
