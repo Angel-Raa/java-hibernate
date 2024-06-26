@@ -46,3 +46,10 @@ select *from customers as c where c.customer_id = 40;
 
 
 SELECT city, COUNT(*) FROM customers AS c GROUP BY c.city;
+SELECT * FROM customers AS c WHERE  c.date_of_birth BETWEEN  '1990-08-25' AND '1999-01-01';
+SELECT * FROM customers AS c WHERE c.city = 'Sabaneta' AND c.street ='Calle del Sur #474'
+SELECT * FROM customers AS c WHERE c.city LIKE 'S%';
+
+SELECT * FROM customers AS c WHERE c.notes LIKE 'P%';
+
+SELECT * FROM customers AS c  ORDER BY c.last_name ASC;

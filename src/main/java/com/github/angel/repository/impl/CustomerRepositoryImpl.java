@@ -17,36 +17,120 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public Customer findByEmail(String email) {
-        return null;
+        Customer customer;
+        final String sql = "SELECT * FROM customers WHERE email = :email";
+        try {
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            query.setParameter("email", email);
+            customer = (Customer) query.getSingleResult();
+            entityManager.getTransaction().commit();
+            return customer;
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Customer not found with: " + email, e);
+        }
+
     }
 
     @Override
     public Customer findByFirstName(String firstName) {
-        return null;
+        Customer customer = new Customer();
+        final String sql = "SELECT * FROM customers WHERE first_name = :firstName";
+        try {
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            customer = (Customer) query.getSingleResult();
+            return customer;
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("There are no customers with that name", e);
+        }
     }
 
     @Override
     public List<Customer> findByCityContaining(String city) {
-        return List.of();
+        String s = "%" + city.toUpperCase();
+        List<Customer> customers;
+        final String sql = "SELECT * FROM customers AS c WHERE UPPER(c.city) LIKE :city";
+        try {
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            query.setParameter("city", s);
+            customers = query.getResultList();
+            return customers;
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Error retrieving customers", e);
+        }
+
     }
 
     @Override
     public List<Customer> findByCityAndStreet(String city, String street) {
-        return List.of();
+        List<Customer> customers;
+        final String sql = "SELECT * FROM customers AS c WHERE c.city=:city AND c.street=:street ";
+        try {
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            query.setParameter("city", city);
+            query.setParameter("street", street);
+            customers = query.getResultList();
+            return customers;
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Error retrieving customers", e);
+        }
+
     }
 
     @Override
     public List<Customer> findAllByOrderByLastNameAsc() {
-        return List.of();
+        List<Customer> customers;
+        final String sql = "SELECT *FROM customers AS c ORDER BY c.last_name ASC ";
+        try {
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            customers = query.getResultList();
+            return customers;
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Error retrieving customers", e);
+        }
+
     }
 
     @Override
     public List<Customer> findByNotesContaining(String keyword) {
-        return List.of();
+        final String s = keyword.toUpperCase() + "%";
+        List<Customer> customers;
+        final String sql = "SELECT * FROM customers AS c WHERE UPPER(c.notes) LIKE :keyword";
+        try {
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            query.setParameter("keyword", s);
+            customers = query.getResultList();
+            return customers;
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Error retrieving customers", e);
+        }
     }
 
     @Override
     public List<Customer> findByDateOfBirthBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Customer> customers;
+        final String sql = "SELECT * FROM customers AS c WHERE  c.date_of_birth BETWEEN :startDate AND :endDate";
+        try {
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            query.setParameter("startDate", startDate);
+            query.setParameter("endDate", endDate);
+            customers = query.getResultList();
+            return customers;
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Error retrieving customers", e);
+
+        }
+    }
+
+    @Override
+    public List<Customer> findAllByOrderByFirstNameAsc() {
         return List.of();
     }
 
@@ -60,8 +144,6 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         } catch (Exception e) {
             entityManager.getTransaction().getRollbackOnly();
             throw new CustomerNotFoundException("Error retrieving customers", e);
-        } finally {
-            entityManager.close();
         }
     }
 
@@ -107,11 +189,11 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public void deleteById(Long id) {
-        final String sql = "DELETE FROM customers AS c WHERE c.customer_id = :customer_id";
+        final String sql = "DELETE FROM customers AS c WHERE c.customer_id = :customerId";
         try {
             entityManager.getTransaction().begin();
             Query query = entityManager.createNativeQuery(sql, Customer.class);
-            query.setParameter(1, id);
+            query.setParameter("customerId", id);
             query.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (Exception e) {

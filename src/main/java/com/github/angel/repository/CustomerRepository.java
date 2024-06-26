@@ -13,6 +13,9 @@ public interface CustomerRepository extends GenericRepository<Customer, Long> {
     List<Customer> findAllByOrderByLastNameAsc();
     List<Customer> findByNotesContaining(String keyword);
     List<Customer> findByDateOfBirthBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<Customer> findAllByOrderByFirstNameAsc();
+
+
 
 
 
