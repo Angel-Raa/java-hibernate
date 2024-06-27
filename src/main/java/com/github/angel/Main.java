@@ -45,8 +45,10 @@ public class Main {
 //        var o  = repository.findByNotesContaining("P");
 //        o.stream().forEach(System.out::println);
 
-        var o = repository.findAllByOrderByLastNameAsc();
-        o.stream().forEach(System.out::println);
+//        var o = repository.findAllByOrderByLastNameAsc();
+//      o.stream().forEach(System.out::println);
+        String fullName = repository.fullName("Ana");
+        System.out.println(fullName);
 
 
     }

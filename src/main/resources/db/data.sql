@@ -53,3 +53,7 @@ SELECT * FROM customers AS c WHERE c.city LIKE 'S%';
 SELECT * FROM customers AS c WHERE c.notes LIKE 'P%';
 
 SELECT * FROM customers AS c  ORDER BY c.last_name ASC;
+
+
+SELECT COUNT(*) AS COUNT_CAMPO FROM customers AS C
+SELECT c.first_name || ' ' || c.last_name AS full_name FROM customers AS C WHERE C.first_name = 'Gabriela';

@@ -84,7 +84,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     @Override
     public List<Customer> findAllByOrderByLastNameAsc() {
         List<Customer> customers;
-        final String sql = "SELECT *FROM customers AS c ORDER BY c.last_name ASC ";
+        final String sql = "SELECT * FROM customers AS c ORDER BY c.last_name ASC ";
         try {
             Query query = entityManager.createNativeQuery(sql, Customer.class);
             customers = query.getResultList();
@@ -131,7 +131,35 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public List<Customer> findAllByOrderByFirstNameAsc() {
-        return List.of();
+       final String sql =  "SELECT * FROM customers AS c ORDER BY c.first_name ASC";
+       List<Customer> customers ;
+       try {
+          Query query = entityManager.createNativeQuery(sql, Customer.class);
+          customers =  query.getResultList();
+          return customers;
+       }catch (NoResultException e){
+           entityManager.getTransaction().getRollbackOnly();
+           throw new CustomerNotFoundException("Error retrieving customers", e);
+       }
+    }
+
+    @Override
+    public String fullName(String name) {
+        final String sql = "SELECT first_name, last_name FROM customers WHERE first_name = :firstName";
+        String fullName;
+        List<Object>objects ;
+        try {
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createNativeQuery(sql, Customer.class);
+            query.setParameter("firstName", name);
+            fullName = (String) query.getSingleResult();
+            entityManager.getTransaction().commit();
+            return fullName;
+        }catch (Exception e){
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Name not found", e);
+        }
+
     }
 
     @Override
