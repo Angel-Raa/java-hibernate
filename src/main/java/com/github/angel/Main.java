@@ -6,6 +6,7 @@ import com.github.angel.repository.CustomerRepository;
 import com.github.angel.repository.impl.CustomerRepositoryImpl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -47,8 +48,18 @@ public class Main {
 
 //        var o = repository.findAllByOrderByLastNameAsc();
 //      o.stream().forEach(System.out::println);
-        String fullName = repository.fullName("Ana");
-        System.out.println(fullName);
+
+        System.out.println("=========== Consulta con nombre y apellido conatenados");
+//        List<String> fullName = repository.fullName();
+//        fullName.stream().forEach(System.out::println);
+
+        int count = repository.count();
+        System.out.println(count);
+
+        int max = repository.max();
+        System.out.println(max);
+        int min = repository.min();
+        System.out.println(min);
 
 
     }

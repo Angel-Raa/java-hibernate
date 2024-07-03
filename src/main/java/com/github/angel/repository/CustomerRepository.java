@@ -5,7 +5,7 @@ import com.github.angel.entity.Customer;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CustomerRepository extends GenericRepository<Customer, Long> {
+public interface CustomerRepository extends GenericRepository<Customer, Long> , FunctionRepository {
     Customer findByEmail(String email);
     Customer findByFirstName(String firstName);
     List<Customer> findByCityContaining(String city);
@@ -14,8 +14,8 @@ public interface CustomerRepository extends GenericRepository<Customer, Long> {
     List<Customer> findByNotesContaining(String keyword);
     List<Customer> findByDateOfBirthBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<Customer> findAllByOrderByFirstNameAsc();
-    String fullName (String name);
-
+    List<String> fullName();
+    Integer count();
 
 
 

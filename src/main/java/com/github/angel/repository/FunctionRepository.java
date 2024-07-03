@@ -1,12 +1,12 @@
 package com.github.angel.repository;
 
 public interface FunctionRepository {
-    int sum();
+    Integer sum();
+    Integer max();
+    Integer min();
 
-    int min();
+    Integer avg();
 
-    int avg();
-
-    int count();
+    Integer count();
 
 }

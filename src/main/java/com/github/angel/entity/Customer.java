@@ -32,19 +32,7 @@ public class Customer implements Serializable {
     @Column(name = "city")
     private String city;
 
-    public Customer() {
-    }
-
-    /**
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param phoneNumber
-     * @param dateOfBirth
-     * @param street
-     * @param notes
-     * @param city
-     */
+    public Customer() {}
     public Customer(String firstName, String lastName, String email, String phoneNumber, LocalDateTime dateOfBirth, String street, String notes, String city) {
         this.firstName = firstName;
         this.lastName = lastName;

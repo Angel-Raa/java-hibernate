@@ -57,3 +57,7 @@ SELECT * FROM customers AS c  ORDER BY c.last_name ASC;
 
 SELECT COUNT(*) AS COUNT_CAMPO FROM customers AS C
 SELECT c.first_name || ' ' || c.last_name AS full_name FROM customers AS C WHERE C.first_name = 'Gabriela';
+SELECT CONCAT(c.first_name, ' ', c.last_name ) AS fullName FROM customers AS c
+SELECT COUNT(*) FROM customers;
+SELECT MIN(c.customer_id) AS minino FROM customers AS c;
+SELECT MAX (c.customer_id) AS maximo FROM customers AS c;

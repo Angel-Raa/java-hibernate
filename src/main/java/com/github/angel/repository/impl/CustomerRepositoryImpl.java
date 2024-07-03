@@ -132,35 +132,72 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     @Override
     public List<Customer> findAllByOrderByFirstNameAsc() {
        final String sql =  "SELECT * FROM customers AS c ORDER BY c.first_name ASC";
-       List<Customer> customers ;
        try {
           Query query = entityManager.createNativeQuery(sql, Customer.class);
-          customers =  query.getResultList();
-          return customers;
+          return query.getResultList();
        }catch (NoResultException e){
            entityManager.getTransaction().getRollbackOnly();
            throw new CustomerNotFoundException("Error retrieving customers", e);
        }
     }
 
+
     @Override
-    public String fullName(String name) {
-        final String sql = "SELECT first_name, last_name FROM customers WHERE first_name = :firstName";
-        String fullName;
-        List<Object>objects ;
+    public List<String> fullName() {
         try {
-            entityManager.getTransaction().begin();
-            Query query = entityManager.createNativeQuery(sql, Customer.class);
-            query.setParameter("firstName", name);
-            fullName = (String) query.getSingleResult();
-            entityManager.getTransaction().commit();
-            return fullName;
-        }catch (Exception e){
+            TypedQuery<String> query = entityManager.createQuery("SELECT CONCAT(c.firstName, ' ', c.lastName) FROM Customer c", String.class);
+            return query.getResultList();
+        } catch (Exception e) {
             entityManager.getTransaction().getRollbackOnly();
-            throw new CustomerNotFoundException("Name not found", e);
+            throw new CustomerNotFoundException("Error retrieving customers", e);
+        }
+    }
+
+    @Override
+    public Integer sum() {
+        return 0;
+    }
+
+    @Override
+    public Integer max() {
+      try {
+          TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(c.customerId) FROM Customer c ", Long.class);
+          return query.getSingleResult().intValue();
+      }catch (NoResultException e){
+          entityManager.getTransaction().getRollbackOnly();
+          throw new CustomerNotFoundException("Error retrieving customers", e);
+      }
+    }
+
+    @Override
+    public Integer min() {
+        try {
+            TypedQuery<Long> query = entityManager.createQuery("SELECT MIN(c.customerId) FROM Customer c ", Long.class);
+            return query.getSingleResult().intValue();
+        }catch (NoResultException e){
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Error retrieving customers", e);
         }
 
     }
+
+    @Override
+    public Integer avg() {
+        return 0;
+    }
+
+    @Override
+    public Integer count() {
+       try {
+          TypedQuery<Long> query = entityManager.createQuery("SELECT COUNT(c) AS total FROM Customer c", Long.class);
+          return  query.getSingleResult().intValue();
+
+       }catch (NoResultException e){
+           entityManager.getTransaction().getRollbackOnly();
+           throw new CustomerNotFoundException("not found customer", e);
+       }
+    }
+
 
     @Override
     public List<Customer> findAll() {
