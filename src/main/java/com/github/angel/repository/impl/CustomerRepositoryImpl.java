@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,7 +49,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public List<Customer> findByCityContaining(String city) {
+    public List<Customer> findByCityContaining(@NotNull String city) {
         String s = "%" + city.toUpperCase();
         List<Customer> customers;
         final String sql = "SELECT * FROM customers AS c WHERE UPPER(c.city) LIKE :city";
@@ -155,7 +156,13 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public Integer sum() {
-        return 0;
+        try {
+            TypedQuery<Long> query = entityManager.createQuery("SELECT SUM(c.customerId) FROM Customer c ", Long.class);
+            return query.getSingleResult().intValue();
+        } catch (NoResultException e) {
+            entityManager.getTransaction().getRollbackOnly();
+            throw new CustomerNotFoundException("Error retrieving customers", e);
+        }
     }
 
     @Override

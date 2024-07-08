@@ -6,20 +6,18 @@ import com.github.angel.repository.CustomerRepository;
 import com.github.angel.repository.impl.CustomerRepositoryImpl;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Customer customer = new Customer("Angel ", "Aguero", "angel@example.com",
-                "123-456-7890", LocalDateTime.now(),
+        Customer customer = new Customer("Minerva ", "Bael", "minerva123@example.com",
+                "111-222-3333", LocalDateTime.now(),
                 "123 Main St", null, "CA");
 
         CustomerRepository repository = new CustomerRepositoryImpl();
 
 //        repository.findAll().stream().forEach(System.out::println);
         System.out.println("Hola Mundo");
-
-//        repository.save(customer);
+        repository.save(customer);
         //repository.deleteById(40L);
 
         Customer newCustomer = new Customer("Angel Rafael ", "Aguero Aquino", "angel@example.com",
@@ -61,6 +59,8 @@ public class Main {
         int min = repository.min();
         System.out.println(min);
 
+        int sum = repository.sum();
+        System.out.println(sum);
 
     }
 }

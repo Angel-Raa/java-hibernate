@@ -1,11 +1,15 @@
 package com.github.angel.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "customers")
@@ -31,6 +35,31 @@ public class Customer implements Serializable {
     private String notes;
     @Column(name = "city")
     private String city;
+    @Column(name ="create_at")
+    @CreationTimestamp
+    private LocalDateTime createAt;
+    @UpdateTimestamp
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
+
+    //@PrePersist
+    public void prePersist(){
+        System.out.println("Inicializar algo justo anter del persist");
+        this.createAt = now();
+    }
+
+    //@PreUpdate
+    public void preUpdate(){
+        System.out.println("Inicializar algo justo anter del update");
+        this.updateAt = now();
+
+    }
+
+    @PreRemove
+    public void preRemove(){
+        System.out.println("Inicializar algo justo anter del update");
+    }
+
 
     public Customer() {}
     public Customer(String firstName, String lastName, String email, String phoneNumber, LocalDateTime dateOfBirth, String street, String notes, String city) {
@@ -117,18 +146,36 @@ public class Customer implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Customer{");
-        sb.append("customer_id=").append(customerId);
+        sb.append("customerId=").append(customerId);
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", email='").append(email).append('\'');
         sb.append(", phoneNumber='").append(phoneNumber).append('\'');
-        sb.append(", datePfBirth='").append(dateOfBirth).append('\'');
+        sb.append(", dateOfBirth=").append(dateOfBirth);
         sb.append(", street='").append(street).append('\'');
         sb.append(", notes='").append(notes).append('\'');
         sb.append(", city='").append(city).append('\'');
+        sb.append(", createAt=").append(createAt);
+        sb.append(", updateAt=").append(updateAt);
         sb.append('}');
         return sb.toString();
     }
